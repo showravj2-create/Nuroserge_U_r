@@ -1,0 +1,51 @@
+# Full model: attention U-Net, Dice + BCE + gradient-boundary loss, modality dropout.
+seed: 42
+
+experiment: brats_2p5d_unet
+
+model:
+  in_channels: 12        # 4 modalities x 3 context slices
+  out_channels: 1        # 1 for target_mode: whole_tumor, 3 for target_mode: regions
+  base_channels: 16
+  dropout: 0.15
+  attention: true
+
+training:
+  epochs: 10
+  batch_size: 8          # BatchNorm is unreliable at batch size 1
+  lr: 0.0002
+  weight_decay: 0.00001
+  device: cuda
+  amp: true
+  grad_clip: 1.0
+  val_max_patients: null # null = validate on every validation patient each epoch
+
+data:
+  synthetic: false
+  root: /path/to/BraTS   # override with --data-root; folder containing the patient folders
+  modalities:
+    - t1
+    - t1ce
+    - t2
+    - flair
+  num_slices_context: 3
+  target_size:
+    - 128
+    - 128
+  target_mode: whole_tumor       # whole_tumor | regions (WT/TC/ET; needs out_channels: 3)
+  max_cached_patients: 2
+  # One split definition shared by train / val / test. Do not change between runs
+  # that you intend to compare.
+  split_seed: 42
+  train_fraction: 0.70
+  val_fraction: 0.15
+  test_fraction: 0.15
+  # Training slices: every slice containing tumour plus this fraction of tumour-free slices.
+  slice_policy: tumor_plus_negatives   # or: all
+  negative_slice_fraction: 0.25
+  modality_dropout: 0.10
+
+loss:
+  dice_weight: 1.0
+  bce_weight: 0.5
+  boundary_weight: 0.2

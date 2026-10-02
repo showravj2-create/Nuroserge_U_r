@@ -1,0 +1,49 @@
+# Ablation baseline: plain U-Net (no attention), Dice + BCE only, no modality dropout.
+# Everything else (split, data, schedule) is identical to brats_2p5d.yaml.
+seed: 42
+
+experiment: brats_baseline_unet
+
+model:
+  in_channels: 12
+  out_channels: 1
+  base_channels: 16
+  dropout: 0.15
+  attention: false
+
+training:
+  epochs: 10
+  batch_size: 8
+  lr: 0.0002
+  weight_decay: 0.00001
+  device: cuda
+  amp: true
+  grad_clip: 1.0
+  val_max_patients: null
+
+data:
+  synthetic: false
+  root: /path/to/BraTS
+  modalities:
+    - t1
+    - t1ce
+    - t2
+    - flair
+  num_slices_context: 3
+  target_size:
+    - 128
+    - 128
+  target_mode: whole_tumor
+  max_cached_patients: 2
+  split_seed: 42
+  train_fraction: 0.70
+  val_fraction: 0.15
+  test_fraction: 0.15
+  slice_policy: tumor_plus_negatives
+  negative_slice_fraction: 0.25
+  modality_dropout: 0.0
+
+loss:
+  dice_weight: 1.0
+  bce_weight: 0.5
+  boundary_weight: 0.0

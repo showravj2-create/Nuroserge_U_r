@@ -1,0 +1,27 @@
+seed: 42
+experiment: smoke
+
+model:
+  in_channels: 4
+  out_channels: 1
+  base_channels: 16
+  dropout: 0.1
+  attention: true
+
+training:
+  epochs: 10
+  batch_size: 8
+  lr: 0.001
+  weight_decay: 0.0001
+  device: cpu
+
+data:
+  synthetic: true
+  image_size: 128
+  train_samples: 80
+  val_samples: 20
+
+loss:
+  dice_weight: 1.0
+  bce_weight: 0.5
+  boundary_weight: 0.2

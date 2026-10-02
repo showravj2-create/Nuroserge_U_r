@@ -1,0 +1,29 @@
+.venv/
+__pycache__/
+*.pyc
+.pytest_cache/
+.coverage
+htmlcov/
+.vscode/
+.idea/
+
+# Model outputs
+*.pt
+*.pth
+*.ckpt
+
+# Experiment outputs
+outputs/
+runs/
+results/
+
+# Local datasets
+/data/
+datasets/
+*.nii
+*.nii.gz
+
+# OS files
+.DS_Store
+Thumbs.db
+evaluation.json
